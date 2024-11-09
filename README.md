@@ -17,3 +17,4 @@ this analysis is performed on historical data and is used to understand company,
 
     how many artworks were aquired every year - so we see if museums have aquisition spikes at the same time
     which medium was aquired for artworks the most? - can we see that museums prefer some specific medium? how the medium proportions change over time? 
+    purchase or gift? how museums build their collections?
