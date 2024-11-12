@@ -9,7 +9,6 @@ def load_data(folder_path):
     # Filter out the CSV files
     csv_files = [file for file in all_files if file.endswith(".csv")]
 
-    # List to hold the dataframes
     dataframes = []
 
     # Loop through each CSV file and read the data into a dataframe
