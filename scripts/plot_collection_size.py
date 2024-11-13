@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.io as pio
 
 
 def plot_collection_size(museums_data, museum_names):
@@ -33,5 +34,6 @@ def plot_collection_size(museums_data, museum_names):
         yaxis_title="N of artworks in collection",
     )
     fig.update_yaxes(type="log", range=[0, 5])
+    fig.update_layout(template="plotly_white")
 
     return fig
