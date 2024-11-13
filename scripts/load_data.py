@@ -10,11 +10,13 @@ def load_data(folder_path):
     csv_files = [file for file in all_files if file.endswith(".csv")]
 
     dataframes = []
+    museum_names = []
 
     # Loop through each CSV file and read the data into a dataframe
     for csv_file in csv_files:
         file_path = os.path.join(folder_path, csv_file)
         df = pd.read_csv(file_path)  # Read the CSV file into a DataFrame
         dataframes.append(df)  # Add the dataframe to the list
+        museum_names.append(os.path.splitext(csv_file)[0])
 
-    return dataframes
+    return dataframes, museum_names

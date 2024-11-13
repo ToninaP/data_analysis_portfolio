@@ -6,9 +6,7 @@ from plotly.offline import init_notebook_mode, iplot
 import plotly.express as px
 
 
-def plot_medium_over_years(museum_data):
-    # we need to work with arrays of dataframes
-    museumNamesAr = ["met", "reina sofia", "tate"]
+def plot_medium_over_years(museum_data, museum_names):
 
     df = museum_data[0]
 
