@@ -5,9 +5,6 @@ from plotly.subplots import make_subplots
 from plotly.offline import init_notebook_mode, iplot
 
 
-pd.options.display.max_columns = None
-
-
 def plot_medium_over_years(museum_data):
     # we need to work with arrays of dataframes
     museumNamesAr = ["met", "reina sofia", "tate"]
