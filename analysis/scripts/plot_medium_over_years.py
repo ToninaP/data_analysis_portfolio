@@ -3,36 +3,26 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from plotly.offline import init_notebook_mode, iplot
+import plotly.express as px
 
 
 def plot_medium_over_years(museum_data):
     # we need to work with arrays of dataframes
     museumNamesAr = ["met", "reina sofia", "tate"]
 
-    fig = make_subplots(rows=3, cols=1)
+    df = museum_data[0]
 
-    fig.add_trace(
-        go.Scatter(
-            x=museum_data[0]["Year_acquisition"], y=museum_data[0]["Medium_classified"]
-        ),
-        row=1,
-        col=1,
+    grouped_df = (
+        df.groupby(["Medium_classified", "Year_acquisition"])
+        .size()
+        .reset_index(name="Count")
     )
 
-    fig.add_trace(
-        go.Scatter(
-            x=museum_data[1]["Year_acquisition"], y=museum_data[1]["Medium_classified"]
-        ),
-        row=2,
-        col=1,
-    )
+    first_acquisition_year = grouped_df["Year_acquisition"].min()
+    filtered_df = grouped_df[grouped_df["Year_acquisition"] > first_acquisition_year]
+    filtered_df = filtered_df.dropna(subset=["Year_acquisition"])
 
-    fig.add_trace(
-        go.Scatter(
-            x=museum_data[2]["Year_acquisition"], y=museum_data[2]["Medium_classified"]
-        ),
-        row=2,
-        col=1,
+    fig = px.area(
+        filtered_df, x="Year_acquisition", y="Count", color="Medium_classified"
     )
-
     return fig
