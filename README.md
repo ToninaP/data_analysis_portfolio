@@ -2,6 +2,11 @@
 this is a personal project to practice different data analysis methods
 
 # data
+| Musem name | Data acquisition method | Link |
+|----------|----------|----------|
+| MET| Open access| https://github.com/metmuseum/openaccess|
+| Row 2, C1| Row 2, C2| Row 2, C3|
+| Row 3, C1| Row 3, C2| Row 3, C3|
 
 # analysis
 
