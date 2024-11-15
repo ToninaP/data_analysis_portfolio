@@ -9,7 +9,7 @@ this is a personal project to practice different data analysis methods
 | Tate| Open access| https://github.com/tategallery/collection|
 |Pomidou|API|https://www.centrepompidou.fr/en/collections|
 |Kiasma|API|https://www.kansallisgalleria.fi/api/swagger/|
-|The Queensland Art Gallery | Gallery of Modern Art (QAGOMA)|Open Access|https://www.data.qld.gov.au/dataset/qagoma-collection|
+|The Queensland Art Gallery / Gallery of Modern Art (QAGOMA)|Open Access|https://www.data.qld.gov.au/dataset/qagoma-collection|
 |||
 |||
 
