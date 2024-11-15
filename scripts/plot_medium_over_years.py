@@ -1,75 +1,104 @@
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import plotly.figure_factory as ff
 
 
-def plot_medium_over_years(museum_data):
-    data_transformed = []
+def plot_medium_over_years(museum_data, museum_names):
+
+    # Define a color map for the labels
+    label_color_map = {
+        "architecture": "#fd7f6f",
+        "graphics": "#7eb0d5",
+        "installation": "#b2e061",
+        "new media": "#bd7ebe",
+        "object": "#ffb55a",
+        "painting": "#ffee65",
+        "photography": "#beb9db",
+        "sculpture": "#fdcce5",
+        "video art": "#8bd3c7",
+    }
+
+    # Create an empty list to hold the figures
     figures = []
 
-    for df in museum_data:
-        # Group by 'Medium_classified' and 'Year_acquisition' and count the occurrences
-        df = (
+    # Loop through all dataframes in museums_data list
+    for idx, df in enumerate(museum_data):
+        print(f"Processing dataframe {idx + 1}...")
+
+        # Grouping the data by 'Medium_classified' and 'Year_acquisition' to get counts
+        grouped_df = (
             df.groupby(["Medium_classified", "Year_acquisition"])
             .size()
             .reset_index(name="Count")
         )
 
-        # Filter out the first acquisition year and drop NaNs
-        first_acquisition_year = df["Year_acquisition"].min()
-        filtered_df = df[df["Year_acquisition"] > first_acquisition_year]
+        # Filter out the first acquisition year
+        first_acquisition_year = grouped_df["Year_acquisition"].min()
+        filtered_df = grouped_df[
+            grouped_df["Year_acquisition"] > first_acquisition_year
+        ]
         filtered_df = filtered_df.dropna(subset=["Year_acquisition"])
 
         # Group the data by 'Medium_classified' and collect the 'Year_acquisition' values
-        grouped = (
-            filtered_df.groupby("Medium_classified")["Year_acquisition"]
-            .apply(list)
-            .tolist()
+        grouped = filtered_df.groupby("Medium_classified")["Year_acquisition"].apply(
+            list
         )
 
-        # Filter out groups with fewer than 2 acquisition years
-        grouped = [group for group in grouped if len(group) > 1]
+        # Only keep groups with more than one element (avoid empty or insufficient data)
+        grouped = grouped[grouped.apply(len) > 1]
 
-        if not grouped:
-            continue  # Skip if no valid groups to plot
+        # If there are still groups left after filtering
+        if not grouped.empty:
+            # Get the group labels
+            group_labels = grouped.index.tolist()
 
-        # Get the corresponding labels for the groups
-        group_labels = (
-            filtered_df["Medium_classified"].unique().tolist()[: len(grouped)]
-        )
+            # Assign colors to data points based on the labels
+            colors = [
+                label_color_map.get(label, "#000000") for label in group_labels
+            ]  # Default to black if label not found
 
-        # Set custom colors for each group
-        colors = [
-            "#fd7f6f",
-            "#7eb0d5",
-            "#b2e061",
-            "#bd7ebe",
-            "#ffb55a",
-            "#ffee65",
-            "#beb9db",
-            "#fdcce5",
-            "#8bd3c7",
-        ][: len(group_labels)]
+            # Create the distplot with the grouped 'Year_acquisition' data, showing a rug plot for single data points
+            fig = ff.create_distplot(
+                grouped.tolist(),
+                group_labels,
+                show_hist=False,
+                colors=colors,
+                show_rug=False,
+                show_curve=True,
+            )
 
-        # Create the distplot with the grouped 'Year_acquisition' data
-        fig = ff.create_distplot(
-            grouped,
-            group_labels,
-            show_hist=False,
-            colors=colors,
-            show_rug=False,
-            show_curve=True,
-        )
-        figures.append(fig)
+            # Add the created figure to the list of figures
+            figures.append(fig)
+        else:
+            pass
 
-    if figures:
-        # Combine the individual figures into one
-        fig2 = go.Figure()
-        for fig in figures:
-            fig2.add_traces(fig.data)
+        # Create the figure with an appropriate number of rows
+    num_figures = len(figures)
+    num_rows = (
+        num_figures  # Assuming one figure per row, modify if you need multiple columns
+    )
 
-        return fig2
-    else:
-        print("No valid data to plot.")
-        return None
+    # Create a subplot grid with enough rows for all figures in 'figures'
+    fig = make_subplots(
+        rows=num_rows,
+        cols=1,
+        subplot_titles=museum_names,
+        shared_xaxes=True,
+        shared_yaxes=True,
+    )
+
+    # Loop through the list of figures
+    for idx, fig_data in enumerate(figures):
+        # Loop through all traces in the current figure (fig_data)
+        for trace in fig_data["data"]:
+            # If it's not the first figure, disable the legend
+            if idx > 0:
+                trace.update(showlegend=False)
+
+            # Add the trace to the correct subplot (row=idx+1, col=1)
+            fig.add_trace(trace, row=idx + 1, col=1)
+    fig.update_layout(template="plotly_white")
+
+    return fig
