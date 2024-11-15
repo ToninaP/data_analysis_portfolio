@@ -5,8 +5,13 @@ this is a personal project to practice different data analysis methods
 | Musem name | Data acquisition method | Link |
 |----------|----------|----------|
 | MET| Open access| https://github.com/metmuseum/openaccess|
-| Row 2, C1| Row 2, C2| Row 2, C3|
-| Row 3, C1| Row 3, C2| Row 3, C3|
+| Reina Sofia| Scraped| https://www.museoreinasofia.es/en/collection/|
+| Tate| Open access| https://github.com/tategallery/collection|
+|Pomidou|API|https://www.centrepompidou.fr/en/collections|
+|Kiasma|API|https://www.kansallisgalleria.fi/api/swagger/|
+|The Queensland Art Gallery | Gallery of Modern Art (QAGOMA)|Open Access|https://www.data.qld.gov.au/dataset/qagoma-collection|
+|||
+|||
 
 # analysis
 
