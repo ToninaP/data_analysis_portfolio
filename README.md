@@ -10,7 +10,7 @@ this is a personal project to practice different data analysis methods
 |Pomidou|API|https://www.centrepompidou.fr/en/collections|
 |Kiasma|API|https://www.kansallisgalleria.fi/api/swagger/|
 |The Queensland Art Gallery / Gallery of Modern Art (QAGOMA)|Open Access|https://www.data.qld.gov.au/dataset/qagoma-collection|
-|||
+|MOT|API|https://museumcollection.tokyo/en/developer/|
 |||
 
 # analysis
