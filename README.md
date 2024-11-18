@@ -11,7 +11,9 @@ this is a personal project to practice different data analysis methods
 |Kiasma|API|https://www.kansallisgalleria.fi/api/swagger/|
 |The Queensland Art Gallery / Gallery of Modern Art (QAGOMA)|Open Access|https://www.data.qld.gov.au/dataset/qagoma-collection|
 |MOT|API|https://museumcollection.tokyo/en/developer/|
-|||
+|MOMA|Open access|https://github.com/MuseumofModernArt/collection|
+|Whitney|Open access|https://github.com/whitneymuseum/open-access/blob/main/artists.csv|
+|SMK|Open access|https://www.smk.dk/en/article/smk-api/|
 
 # analysis
 
