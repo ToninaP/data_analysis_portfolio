@@ -2,8 +2,8 @@
 this is a personal project to practice different data analysis methods
 
 # data
-| Musem name | Data acquisition method | Link |
-|----------|----------|----------|
+| Musem name | Country| Data acquisition method | Link |
+|----------|----------|----------|----------|
 | MET| USA| Open access| https://github.com/metmuseum/openaccess|
 | Reina Sofia| Spain| Scraped| https://www.museoreinasofia.es/en/collection/|
 | Tate| England| Open access| https://github.com/tategallery/collection|
