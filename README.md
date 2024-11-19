@@ -4,16 +4,17 @@ this is a personal project to practice different data analysis methods
 # data
 | Musem name | Data acquisition method | Link |
 |----------|----------|----------|
-| MET| Open access| https://github.com/metmuseum/openaccess|
-| Reina Sofia| Scraped| https://www.museoreinasofia.es/en/collection/|
-| Tate| Open access| https://github.com/tategallery/collection|
-|Pomidou|API|https://www.centrepompidou.fr/en/collections|
-|Kiasma|API|https://www.kansallisgalleria.fi/api/swagger/|
-|The Queensland Art Gallery / Gallery of Modern Art (QAGOMA)|Open Access|https://www.data.qld.gov.au/dataset/qagoma-collection|
-|MOT|API|https://museumcollection.tokyo/en/developer/|
-|MOMA|Open access|https://github.com/MuseumofModernArt/collection|
-|Whitney|Open access|https://github.com/whitneymuseum/open-access/blob/main/artists.csv|
-|SMK|Open access|https://www.smk.dk/en/article/smk-api/|
+| MET| USA| Open access| https://github.com/metmuseum/openaccess|
+| Reina Sofia| Spain| Scraped| https://www.museoreinasofia.es/en/collection/|
+| Tate| England| Open access| https://github.com/tategallery/collection|
+|Pomidou|France|API|https://www.centrepompidou.fr/en/collections|
+|Kiasma|Finland|API|https://www.kansallisgalleria.fi/api/swagger/|
+|The Queensland Art Gallery / Gallery of Modern Art (QAGOMA)|Australia|Open Access|https://www.data.qld.gov.au/dataset/qagoma-collection|
+|MOT|Japan|API|https://museumcollection.tokyo/en/developer/|
+|MOMA|USA|Open access|https://github.com/MuseumofModernArt/collection|
+|Whitney|USA|Open access|https://github.com/whitneymuseum/open-access/blob/main/artists.csv|
+|SMK|Denmark|Open access|https://www.smk.dk/en/article/smk-api/|
+|National Gallery of Art|USA|Open access|https://github.com/NationalGalleryOfArt/opendata|
 
 # analysis
 
