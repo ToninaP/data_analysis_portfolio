@@ -1,11 +1,60 @@
 def load_acquisition_tags():
     acqusition_tags = [
-        ["gift", "given", "memory", "donors", "git", "gif"],  # gift
-        ["fund", "foundation"],  # assisted purchase
-        ["bequest", "memory"],  # bequest
-        ["museum accession", "purchase", "purchase", "exchange"],
-        ["jointly"],  # co-owned
-        ["loan", "collection"],
+        [
+            "gift",
+            "given",
+            "memory",
+            "donors",
+            "git",
+            "gif",
+            "donor",
+            "gfit",
+            "girf",
+            "girt",
+            "gilft",
+            "presented",
+            "donation",
+            "don",
+            "dation",
+            "friends",
+            "courtesy",
+            "gratitude",
+        ],  # gift
+        [
+            "fund",
+            "foundation",
+            "trust",
+            "generosity",
+        ],  # assisted purchase
+        [
+            "bequest",
+            "memory",
+            "beqest",
+            "beguest",
+            "bequeathed",
+            "will",
+            "inheritance",
+            "legs",
+            "estate",
+            "honor",
+            "endowment",
+        ],  # bequest
+        [
+            "museum",
+            "purchase",
+            "purchase",
+            "exchange",
+            "administration",
+            "achat",
+            "puchase",
+            "acquired",
+        ],  # museum accession
+        ["jointly", "attribution"],  # co-owned
+        ["loan", "collection", "transfer", "lent", "dépôt"],  # loan
+        ["tax", "attribution etat", "saisie"],  # tax
+        ["echange", "barter"],  # exchange
+        ["artist", "photographer"],  # courtesy of the artist
+        ["commissioned"],  # comissioned
     ]
     acquisition_methods = [
         "gift",
@@ -14,6 +63,10 @@ def load_acquisition_tags():
         "museum accession",
         "jointly owned",
         "loan",
+        "tax",
+        "exchange",
+        "courtesy of the artist",
+        "commissioned",
     ]
 
     return acqusition_tags, acquisition_methods
