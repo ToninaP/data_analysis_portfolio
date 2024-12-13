@@ -1,9 +1,9 @@
 def load_acquisition_tags():
     acqusition_tags = [
-        ["gift", "given", "memory", "donors"],  # gift
+        ["gift", "given", "memory", "donors", "git", "gif"],  # gift
         ["fund", "foundation"],  # assisted purchase
-        ["bequest"],  # bequest
-        ["museum accession", "purchase", "purchase"],
+        ["bequest", "memory"],  # bequest
+        ["museum accession", "purchase", "purchase", "exchange"],
         ["jointly"],  # co-owned
         ["loan", "collection"],
     ]
