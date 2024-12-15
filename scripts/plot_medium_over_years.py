@@ -5,8 +5,7 @@ from plotly.subplots import make_subplots
 import plotly.figure_factory as ff
 
 
-def plot_medium_over_years(museum_data, museum_names):
-
+def plot_medium_over_years(museum_data, museum_names, min_year=1860):
     # Define a color map for the labels
     label_color_map = {
         "architecture": "#fd7f6f",
@@ -25,11 +24,11 @@ def plot_medium_over_years(museum_data, museum_names):
 
     # Loop through all dataframes in museums_data list
     for idx, df in enumerate(museum_data):
-        print(f"Processing dataframe {idx + 1}...")
+        df_filtered = df[df["Date_creation_year"] >= min_year]
 
         # Grouping the data by 'Medium_classified' and 'Year_acquisition' to get counts
         grouped_df = (
-            df.groupby(["Medium_classified", "Year_acquisition"])
+            df_filtered.groupby(["Medium_classified", "Year_acquisition"])
             .size()
             .reset_index(name="Count")
         )
@@ -74,7 +73,7 @@ def plot_medium_over_years(museum_data, museum_names):
         else:
             pass
 
-        # Create the figure with an appropriate number of rows
+    # Create the figure with an appropriate number of rows
     num_figures = len(figures)
     num_rows = (
         num_figures  # Assuming one figure per row, modify if you need multiple columns
@@ -99,6 +98,21 @@ def plot_medium_over_years(museum_data, museum_names):
 
             # Add the trace to the correct subplot (row=idx+1, col=1)
             fig.add_trace(trace, row=idx + 1, col=1)
-    fig.update_layout(template="plotly_white")
+
+    # Set the x-axis range explicitly to start from min_year (1860)
+    fig.update_xaxes(
+        range=[
+            min_year,
+            None,
+        ],  # Set the x-axis to start from min_year and let the max value be auto-calculated
+        title="Year of Acquisition",
+    )
+
+    # Customize layout, including template for clean visuals
+    fig.update_layout(
+        template="plotly_white",
+        width=900,
+        height=2000,
+    )
 
     return fig
