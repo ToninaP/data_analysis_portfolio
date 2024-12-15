@@ -52,7 +52,7 @@ def plot_medium_bar(museum_data, museum_names, min_year=1860):
     fig.update_layout(
         barmode="stack",
         title="Stacked Bar Chart of Media Percentages by Dataset",
-        xaxis_title="Dataset Name",
+        xaxis_title="Museum Name",
         yaxis_title="Percent of Media",
         xaxis=dict(
             tickmode="array",
@@ -60,5 +60,5 @@ def plot_medium_bar(museum_data, museum_names, min_year=1860):
             ticktext=museum_names,
         ),
     )
-
+    fig.update_layout(template="plotly_white")
     return fig
