@@ -3,7 +3,7 @@ from plotly.subplots import make_subplots
 import math  # Import math for ceiling function
 
 
-def plot_medium(museums_data, museum_names, min_year=1860):
+def plot_medium_pie(museums_data, museum_names, min_year=1860):
     """
     Plot pie charts for different museums based on the medium of artworks,
     filtering for artworks created after a specific year.
