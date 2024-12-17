@@ -4,6 +4,26 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from shapely.geometry import Point
+import pycountry
+
+
+def normalize_country_name(country_name):
+    """
+    Normalize country name to a consistent format for matching.
+    Use pycountry to handle common name discrepancies (e.g., 'USA' vs 'United States').
+    """
+    try:
+        # Try to match country name using pycountry
+        country = pycountry.countries.get(name=country_name)
+        if country:
+            return country.name
+        else:
+            # If no match is found, try to match country code (e.g., 'US' to 'United States')
+            country = pycountry.countries.get(alpha_2=country_name)
+            return country.name if country else country_name
+    except KeyError:
+        # If pycountry fails, return the original name
+        return country_name
 
 
 def plot_origin_countries(museum_data, museum_names, min_year=1860):
@@ -17,6 +37,11 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
 
         # Remove rows where 'Country_calculated' is NaN (empty)
         df = df.dropna(subset=["Country_calculated"])
+
+        # Normalize country names in the museum data
+        df["Country_calculated"] = df["Country_calculated"].apply(
+            normalize_country_name
+        )
 
         # If the dataframe is empty after filtering, skip this museum
         if df.empty:
@@ -32,8 +57,8 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
     # Load the world map shapefile
     world = gpd.read_file(shapefile_path)
 
-    # Assuming the correct column is 'NAME' (it could also be 'NAME_LONG' or 'country')
-    country_column = "NAME"
+    # Normalize the country names in the shapefile (to match the museum data)
+    world["NAME"] = world["NAME"].apply(normalize_country_name)
 
     # Create a subplot grid (one for each museum)
     num_subplots = len(valid_museum_names)
@@ -48,7 +73,7 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
         specs=[[{"type": "choropleth"}] * cols]
         * rows,  # Define subplots to be choropleth maps
         vertical_spacing=0.05,  # Reduce vertical space between rows
-        horizontal_spacing=0.05,
+        horizontal_spacing=0.05,  # Reduce horizontal space between columns
     )
 
     # Custom colorscale that colors 0 mentions as gray, and the rest using the "Viridis" scale
@@ -59,35 +84,34 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
         [1, "yellow"],  # Ending point of "Viridis"
     ]
 
+    # To track countries with no mentions in any dataset
+    all_data = pd.concat(valid_museum_data, ignore_index=True)
+    country_mentions = all_data["Country_calculated"].value_counts().reset_index()
+    country_mentions.columns = ["Country", "Mentions"]
+
+    # Get the list of countries that have no mentions in any dataset
+    countries_with_no_mentions = set(world["NAME"]) - set(country_mentions["Country"])
+
+    print("Countries with no mentions in any dataset:")
+    print(countries_with_no_mentions)
+
     # Iterate through each dataset in valid_museum_data and plot the locations
     for i, (data, name) in enumerate(zip(valid_museum_data, valid_museum_names)):
         # Combine all museum data and count the mentions of each country
         country_mentions = data["Country_calculated"].value_counts().reset_index()
         country_mentions.columns = ["Country", "Mentions"]
 
-        # Debugging: Check the country_mentions DataFrame
-        # print(f"Country mentions for {name}:")
-        # print(country_mentions.head())
-
         # Merge the country mentions with the shapefile data
         world_merged = world.merge(
-            country_mentions, left_on=country_column, right_on="Country", how="left"
+            country_mentions, left_on="NAME", right_on="Country", how="left"
         )
-
-        # Debugging: Check the result of the merge
-        # print(f"Merged world data for {name}:")
-        # print(world_merged[["Country", "Mentions"]].head())
 
         # Fill NaN values in 'Mentions' with 0 (countries that have no mentions)
         world_merged["Mentions"] = world_merged["Mentions"].fillna(0)
 
-        # Debugging: Check if 'Mentions' column exists after fillna
-        # print(f"Final merged data for {name} (with filled NaNs):")
-        # print(world_merged[["Country", "Mentions"]].head())
-
         # Create a choropleth map for the current museum dataset
         choropleth_trace = go.Choropleth(
-            locations=world_merged[country_column],
+            locations=world_merged["NAME"],
             locationmode="country names",
             z=world_merged["Mentions"],
             hoverinfo="location+z",
@@ -113,9 +137,12 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
             coastlinecolor="black",
             lakecolor="white",
         ),
-        height=1500,
-        width=1500,
+        height=800,
+        width=1200,
+        margin=dict(
+            t=100, b=25, l=25, r=25
+        ),  # Adjust the margins around the entire plot
         template="plotly_dark",
     )
 
-    return fig
+    return fig, world_merged
