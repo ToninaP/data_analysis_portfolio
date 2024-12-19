@@ -50,7 +50,7 @@ def plot_collection_size(museums_data, museum_names, log_scale=False):
         go.Bar(
             x=museum_names_sorted,
             y=contemporary_sizes_sorted,
-            name="Contemporary Artworks (Post-1860)",
+            name="Contemporary and Modern Artworks (Post-1860)",
             marker_color="skyblue",  # Light blue for contemporary artworks
             text=contemporary_sizes_sorted,  # Display the number of artworks on top of each bar
             textposition="inside",  # Place text labels inside the bars
@@ -62,7 +62,7 @@ def plot_collection_size(museums_data, museum_names, log_scale=False):
         go.Bar(
             x=museum_names_sorted,
             y=non_contemporary_sizes_sorted,
-            name="Non-Contemporary Artworks (Pre-1860)",
+            name="Classic Artworks (Pre-1860)",
             marker_color="lightcoral",  # Light coral for non-contemporary artworks
             text=non_contemporary_sizes_sorted,
             textposition="inside",
@@ -71,7 +71,7 @@ def plot_collection_size(museums_data, museum_names, log_scale=False):
 
     # Update layout for better readability and a single graph
     fig.update_layout(
-        title="The Number of Artworks in Museum Collections (Contemporary vs Classic)",
+        title="Number of Artworks in Museum Collections (Contemporary vs Classic)",
         xaxis_title="Museum",
         yaxis_title="Number of Artworks in Collection",
         showlegend=True,  # Show legend for the plot
