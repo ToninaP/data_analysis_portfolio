@@ -17,8 +17,9 @@ def plot_medium_pie(museums_data, museum_names, min_year=1860):
     fig: A Plotly figure object.
     """
 
-    # Data transformation: count how many works with medium, filtered by the minimum year
+    # count how many works with medium, filtered by the minimum year
     data_transformed = []
+
     for df in museums_data:
         # Filter data based on the minimum year
         df_filtered = df[df["Date_creation_year"] >= min_year]
@@ -29,6 +30,9 @@ def plot_medium_pie(museums_data, museum_names, min_year=1860):
         )
 
         data_transformed.append(df_grouped)
+
+    for df in data_transformed:
+        df["percent of media"] = 100 * df["Count"] / df["Count"].sum()
 
     number = len(museum_names)
 
@@ -52,15 +56,16 @@ def plot_medium_pie(museums_data, museum_names, min_year=1860):
         col = i % cols + 1  # Determine the column index
 
         fig.add_trace(
-            go.Pie(labels=df["Medium_classified"], values=df["Count"], name=name),
+            go.Pie(
+                labels=df["Medium_classified"], values=df["percent of media"], name=name
+            ),
             row=row,
-            col=col,  # Adding each plot in the appropriate subplot grid
+            col=col,
         )
 
-    # Use `hole` to create a donut-like pie chart
     fig.update_traces(hole=0.4, hoverinfo="label+percent+name")
     fig.update_layout(
-        title_text="Artworks Media Percentage (Filtered by Date Creation >= 1860)",
+        title_text="Artworks Media Percentage",
         width=1200,
         height=900,
     )
