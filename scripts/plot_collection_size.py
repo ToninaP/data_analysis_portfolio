@@ -8,7 +8,7 @@ def plot_collection_size(museums_data, museum_names, log_scale=False):
         museum_names: a list of strings with museum names from museum_data
         log_scale: Boolean, to add logarithmic scaling on y-axis
     Returns:
-        fig: one stacked bar chart figure showing a proportion of modern and contemporary artworks vs classical artworks
+        fig: one bar chart figure showing a proportion of modern and contemporary artworks vs classical artworks
     """
     # Ensure the number of museums matches the data provided
     if len(museums_data) != len(museum_names):
@@ -16,7 +16,7 @@ def plot_collection_size(museums_data, museum_names, log_scale=False):
             "The number of dataset sizes must match the number of dataset names."
         )
 
-    # Initialize lists to store the count of contemporary artworks and non-contemporary artworks
+    # lists to store the count of contemporary artworks and non-contemporary artworks
     contemporary_sizes = []
     non_contemporary_sizes = []
 
@@ -42,7 +42,7 @@ def plot_collection_size(museums_data, museum_names, log_scale=False):
         *sorted_data
     )
 
-    # Create the stacked bar chart
+    # Create bar chart
     fig = go.Figure()
 
     # Add bars for contemporary artworks (post-1860)
@@ -71,8 +71,7 @@ def plot_collection_size(museums_data, museum_names, log_scale=False):
 
     # Update layout for better readability and a single graph
     fig.update_layout(
-        title="Museum Art Collections by Artwork Creation Date",
-        # barmode="stack",  # Stack the bars to show total collection size
+        title="The Number of Artworks in Museum Collections (Contemporary vs Classic)",
         xaxis_title="Museum",
         yaxis_title="Number of Artworks in Collection",
         showlegend=True,  # Show legend for the plot
