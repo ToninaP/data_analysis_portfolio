@@ -2,6 +2,14 @@ import plotly.graph_objects as go
 
 
 def plot_collection_size(museums_data, museum_names, log_scale=False):
+    """This is a function to show how many artworks every museum has in their collection
+    Arg:
+        museums_data: a list of pandas dataframes
+        museum_names: a list of strings with museum names from museum_data
+        log_scale: Boolean, to add logarithmic scaling on y-axis
+    Returns:
+        fig: one stacked bar chart figure showing a proportion of modern and contemporary artworks vs classical artworks
+    """
     # Ensure the number of museums matches the data provided
     if len(museums_data) != len(museum_names):
         raise ValueError(
@@ -64,7 +72,7 @@ def plot_collection_size(museums_data, museum_names, log_scale=False):
     # Update layout for better readability and a single graph
     fig.update_layout(
         title="Museum Art Collections by Artwork Creation Date",
-        barmode="stack",  # Stack the bars to show total collection size
+        # barmode="stack",  # Stack the bars to show total collection size
         xaxis_title="Museum",
         yaxis_title="Number of Artworks in Collection",
         showlegend=True,  # Show legend for the plot
