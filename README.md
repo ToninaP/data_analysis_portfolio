@@ -2,6 +2,7 @@
 this is a personal project to strengthen my data analysis methods
 
 # data
+All data used in the project was open access. I am grateful for institutions allowing the enthusiasts like me to play with their data.
 | Musem name | Country| Data acquisition method | Link |
 |----------|----------|----------|----------|
 | MET| USA| Open access| https://github.com/metmuseum/openaccess|
