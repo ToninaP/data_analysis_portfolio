@@ -1,5 +1,5 @@
 # data_analysis_portfolio
-this is a personal project to practice different data analysis methods
+this is a personal project to strengthen my data analysis methods
 
 # data
 | Musem name | Country| Data acquisition method | Link |
