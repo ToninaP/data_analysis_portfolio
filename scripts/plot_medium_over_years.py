@@ -6,113 +6,111 @@ import plotly.figure_factory as ff
 
 
 def plot_medium_over_years(museum_data, museum_names, min_year=1860):
-    # Define a color map for the labels
+    # colors for labels (fixed global color map)
     label_color_map = {
-        "architecture": "#fd7f6f",
-        "graphics": "#7eb0d5",
-        "installation": "#b2e061",
-        "new media": "#bd7ebe",
-        "object": "#ffb55a",
-        "painting": "#ffee65",
-        "photography": "#beb9db",
-        "sculpture": "#fdcce5",
-        "video art": "#8bd3c7",
+        "architecture": "rgb(253, 127, 111)",
+        "graphics": "rgb(126, 176, 213)",
+        "installation": "rgb(178, 224, 97)",
+        "new media": "rgb(189, 126, 190)",
+        "object": "rgb(255, 181, 90)",
+        "painting": "rgb(255, 238, 101)",
+        "photography": "rgb(190, 185, 219)",
+        "sculpture": "rgb(253, 204, 229)",
+        "video art": "rgb(139, 211, 199)",
     }
 
-    # Create an empty list to hold the figures
-    figures = []
+    # Initialize lists for valid data
+    valid_museum_data = []
+    valid_museum_names = []
 
-    # Loop through all dataframes in museums_data list
-    for idx, df in enumerate(museum_data):
-        df_filtered = df[df["Date_creation_year"] >= min_year]
+    # Process and validate museum data
+    for i, df in enumerate(museum_data):
+        df_filtered = df[df["Year_acquisition"] >= min_year].copy()
+        df_filtered = df_filtered.dropna(subset=["Medium_classified"])
 
-        # Grouping the data by 'Medium_classified' and 'Year_acquisition' to get counts
-        grouped_df = (
-            df_filtered.groupby(["Medium_classified", "Year_acquisition"])
-            .size()
-            .reset_index(name="Count")
-        )
+        if not df_filtered.empty:
+            valid_museum_data.append(df_filtered)
+            valid_museum_names.append(museum_names[i])
 
-        # Filter out the first acquisition year
-        first_acquisition_year = grouped_df["Year_acquisition"].min()
-        filtered_df = grouped_df[
-            grouped_df["Year_acquisition"] > first_acquisition_year
-        ]
-        filtered_df = filtered_df.dropna(subset=["Year_acquisition"])
+    # Get all unique categories across all museums
+    all_categories = set()
+    for df in valid_museum_data:
+        all_categories.update(df["Medium_classified"].unique())
+    all_categories = sorted(list(all_categories))
 
-        # Group the data by 'Medium_classified' and collect the 'Year_acquisition' values
-        grouped = filtered_df.groupby("Medium_classified")["Year_acquisition"].apply(
-            list
-        )
+    # Create figure
+    fig = make_subplots(
+        rows=len(valid_museum_data),
+        cols=1,
+        shared_xaxes=True,
+        subplot_titles=valid_museum_names,
+    )
 
-        # Only keep groups with more than one element (avoid empty or insufficient data)
-        grouped = grouped[grouped.apply(len) > 1]
+    # Create a fixed color mapping for all categories
+    color_mapping = {}
+    for category in all_categories:
+        if category in label_color_map:
+            color_mapping[category] = label_color_map[category]
+        else:
+            # Assign a consistent gray color for unknown categories
+            color_mapping[category] = "rgb(128, 128, 128)"
 
-        # If there are still groups left after filtering
-        if not grouped.empty:
-            # Get the group labels
-            group_labels = grouped.index.tolist()
+    # Plot data for each museum
+    for museum_idx, df in enumerate(valid_museum_data):
+        # Prepare data for this museum
+        yearly_data = {}
 
-            # Assign colors to data points based on the labels
-            colors = [
-                label_color_map.get(label, "#000000") for label in group_labels
-            ]  # Default to black if label not found
+        # Initialize data structure for all years and categories
+        years = df["Year_acquisition"].unique()
+        for year in years:
+            yearly_data[year] = {cat: 0 for cat in all_categories}
 
-            # Create the distplot with the grouped 'Year_acquisition' data, showing a rug plot for single data points
-            fig = ff.create_distplot(
-                grouped.tolist(),
-                group_labels,
-                show_hist=False,
-                colors=colors,
-                show_rug=False,
-                show_curve=True,
+        # Calculate percentages for each category and year
+        for year in years:
+            year_data = df[df["Year_acquisition"] == year]
+            total_items = len(year_data)
+
+            if total_items > 0:
+                category_counts = year_data["Medium_classified"].value_counts()
+                for category, count in category_counts.items():
+                    yearly_data[year][category] = (count / total_items) * 100
+
+        # Plot each category
+        for category in all_categories:
+            x_values = sorted(years)
+            y_values = [yearly_data[year][category] for year in x_values]
+
+            fig.add_trace(
+                go.Scatter(
+                    x=x_values,
+                    y=y_values,
+                    name=category,
+                    mode="none",
+                    fill="tonexty" if category != all_categories[0] else "tozeroy",
+                    fillcolor=color_mapping[category],
+                    line=dict(color=color_mapping[category], width=0),
+                    legendgroup=category,
+                    showlegend=(museum_idx == 0),
+                    stackgroup="one",
+                    hoveron="points+fills",
+                ),
+                row=museum_idx + 1,
+                col=1,
             )
 
-            # Add the created figure to the list of figures
-            figures.append(fig)
-        else:
-            pass
-
-    # Create the figure with an appropriate number of rows
-    num_figures = len(figures)
-    num_rows = (
-        num_figures  # Assuming one figure per row, modify if you need multiple columns
-    )
-
-    # Create a subplot grid with enough rows for all figures in 'figures'
-    fig = make_subplots(
-        rows=num_rows,
-        cols=1,
-        subplot_titles=museum_names,
-        shared_xaxes=True,
-        shared_yaxes=True,
-    )
-
-    # Loop through the list of figures
-    for idx, fig_data in enumerate(figures):
-        # Loop through all traces in the current figure (fig_data)
-        for trace in fig_data["data"]:
-            # If it's not the first figure, disable the legend
-            if idx > 0:
-                trace.update(showlegend=False)
-
-            # Add the trace to the correct subplot (row=idx+1, col=1)
-            fig.add_trace(trace, row=idx + 1, col=1)
-
-    # Set the x-axis range explicitly to start from min_year (1860)
-    fig.update_xaxes(
-        range=[
-            min_year,
-            None,
-        ],  # Set the x-axis to start from min_year and let the max value be auto-calculated
-        title="Year of Acquisition",
-    )
-
-    # Customize layout, including template for clean visuals
+    # Update layout
     fig.update_layout(
         template="plotly_white",
         width=900,
-        height=2000,
+        height=1800,
+        title="Percentage of Acquisitions by Medium Over Years",
+        showlegend=True,
+        legend=dict(yanchor="top", y=0.99, xanchor="left", x=1.0),
+        hovermode="x unified",
     )
+
+    # Update y-axes
+    for i in range(len(valid_museum_data)):
+        fig.update_yaxes(title_text="Percentage (%)", range=[0, 100], row=i + 1, col=1)
 
     return fig
