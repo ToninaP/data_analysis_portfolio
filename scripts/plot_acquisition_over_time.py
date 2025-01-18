@@ -6,16 +6,15 @@ from plotly.subplots import make_subplots
 def plot_acquisition_over_time(museum_data, museum_names, min_year=1860):
     # Define a consistent color palette for the specified acquisition categories
     category_colors = {
-        "museum accession": "rgb(54, 162, 235)",  # Blue
-        "jointly owned": "rgb(255, 159, 64)",  # Orange
-        "bequest": "rgb(75, 192, 192)",  # Teal
-        "gift": "rgb(153, 102, 255)",  # Purple
-        "tax": "rgb(255, 205, 86)",  # Yellow
-        "loan": "rgb(255, 99, 132)",  # Red
-        "exchange": "rgb(255, 159, 64)",  # Orange
-        "commissioned": "rgb(75, 192, 192)",  # Teal
-        "assisted purchase": "rgb(255, 99, 132)",  # Red
-        # Add other colors as needed
+        "museum accession": "rgb(255, 198, 93)",  # Golden yellow
+        "jointly owned": "rgb(126, 141, 232)",  # Periwinkle blue
+        "bequest": "rgb(130, 202, 157)",  # Sage green
+        "gift": "rgb(147, 101, 184)",  # Muted purple
+        "tax": "rgb(92, 124, 250)",  # Royal blue
+        "loan": "rgb(255, 107, 129)",  # Coral pink
+        "exchange": "rgb(83, 186, 157)",  # Turquoise
+        "commissioned": "rgb(255, 170, 195)",  # Soft pink
+        "assisted purchase": "rgb(255, 151, 76)",  # Warm orange
     }
 
     # Initialize a list to keep track of valid museums (those with data to plot)
@@ -24,71 +23,78 @@ def plot_acquisition_over_time(museum_data, museum_names, min_year=1860):
 
     # Process each museum dataset and check if it contains valid data
     for i, df in enumerate(museum_data):
-        # Filter the data by the minimum year
-        df = df[df["Year_acquisition"] >= min_year]
+        df_filtered = df[df["Year_acquisition"] >= min_year].copy()
+        df_filtered = df_filtered.dropna(subset=["Acquistion_classified"])
 
-        # Remove rows where 'Acquisition_classified' is NaN (empty)
-        df = df.dropna(subset=["Acquistion_classified"])
+        if not df_filtered.empty:
+            valid_museum_data.append(df_filtered)
+            valid_museum_names.append(museum_names[i])
 
-        # If the dataframe is empty after filtering, skip this museum
-        if df.empty:
-            continue
-
-        # If there is valid data, add it to the list for plotting
-        valid_museum_data.append(df)
-        valid_museum_names.append(museum_names[i])
-
-    # If no valid data, return an empty figure
-    if not valid_museum_data:
-        return make_subplots(rows=1, cols=1, subplot_titles=["No Data to Plot"])
+    # Get all unique categories across all museums
+    all_categories = set()
+    for df in valid_museum_data:
+        all_categories.update(df["Acquistion_classified"].unique())
+    all_categories = sorted(list(all_categories))
 
     # Create a subplot figure with rows corresponding to valid museums
     fig = make_subplots(
         rows=len(valid_museum_data),
         cols=1,
         shared_xaxes=True,
-        vertical_spacing=0.05,
         subplot_titles=valid_museum_names,
     )
 
-    # Loop through each valid museum's data and add traces to its corresponding subplot
-    for i, df in enumerate(valid_museum_data):
-        # Group the data by 'Acquistion_classified' and 'Year_acquisition' to get counts
-        grouped_df = (
-            df.groupby(["Acquistion_classified", "Year_acquisition"])
-            .size()
-            .reset_index(name="Count")
-        )
+    # Create a fixed color mapping for all categories
+    color_mapping = {}
+    for category in all_categories:
+        if category in category_colors:
+            color_mapping[category] = category_colors[category]
+        else:
+            # Assign a consistent gray color for unknown categories
+            color_mapping[category] = "rgb(128, 128, 128)"
 
-        # Extract the categories of acquisition for plotting
-        museum_acquisition_categories = grouped_df["Acquistion_classified"].unique()
+    # Plot data for each museum
+    for museum_idx, df in enumerate(valid_museum_data):
+        # Prepare data for this museum
+        yearly_data = {}
 
-        # Add a trace for each acquisition category in the subplot corresponding to the current museum
-        for category in museum_acquisition_categories:
-            category_df = grouped_df[grouped_df["Acquistion_classified"] == category]
-            x = category_df["Year_acquisition"]
-            y = category_df["Count"]
+        # Initialize data structure for all years and categories
+        years = df["Year_acquisition"].unique()
+        for year in years:
+            yearly_data[year] = {cat: 0 for cat in all_categories}
 
-            # Only add the trace if the category has data (non-zero count)
-            if not y.empty and y.sum() > 0:
-                # Ensure that categories without a color in the dictionary default to 'gray'
-                color = category_colors.get(category, "gray")
+        # Calculate percentages for each category and year
+        for year in years:
+            year_data = df[df["Year_acquisition"] == year]
+            total_items = len(year_data)
 
-                # Add the trace to the subplot
-                fig.add_trace(
-                    go.Scatter(
-                        x=x,
-                        y=y,
-                        mode="lines",
-                        name=category,
-                        line=dict(color=color, width=2),
-                        stackgroup="one",
-                        groupnorm="percent",  # Normalizes the sum of each stackgroup
-                        legendgroup=category,  # Group all traces of the same category together in the legend
-                    ),
-                    row=i + 1,
-                    col=1,  # Place this trace in the i-th subplot (1-based index)
-                )
+            if total_items > 0:
+                category_counts = year_data["Acquistion_classified"].value_counts()
+                for category, count in category_counts.items():
+                    yearly_data[year][category] = (count / total_items) * 100
+
+        # Plot each category
+        for category in all_categories:
+            x_values = sorted(years)
+            y_values = [yearly_data[year][category] for year in x_values]
+
+            fig.add_trace(
+                go.Scatter(
+                    x=x_values,
+                    y=y_values,
+                    name=category,
+                    mode="none",
+                    fill="tonexty" if category != all_categories[0] else "tozeroy",
+                    fillcolor=color_mapping[category],
+                    line=dict(color=color_mapping[category], width=0),
+                    legendgroup=category,
+                    showlegend=(museum_idx == 0),
+                    stackgroup="one",
+                    hoveron="points+fills",
+                ),
+                row=museum_idx + 1,
+                col=1,
+            )
 
     # Update layout for the entire figure
     fig.update_layout(
@@ -97,7 +103,8 @@ def plot_acquisition_over_time(museum_data, museum_names, min_year=1860):
         yaxis_title="Percentage of Acquisitions",
         showlegend=True,
         template="plotly_white",
-        height=1000,  # Adjust this as needed for your screen size
+        height=1000,
+        hovermode="x unified",
     )
 
     # Update x-axis and y-axis titles for all subplots
