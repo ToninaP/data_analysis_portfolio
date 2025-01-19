@@ -1,8 +1,4 @@
-import os
-import geopandas as gpd
-import pandas as pd
 import plotly.graph_objects as go
-from shapely.geometry import Point
 import pycountry
 
 
@@ -23,7 +19,7 @@ def add_country_code(country_name):
         return None
 
 
-def plot_origin_countries(museum_data, museum_names, min_year=1860):
+def plot_origin_countries2(museum_data, museum_names, min_year=1860):
 
     valid_museum_data = []
     valid_museum_names = []
@@ -63,27 +59,27 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
         )
         df["CODE"] = df["Country_normalized"].apply(add_country_code)
 
-    # Create figure
+    # Create a single subplot (choropleth) with one plot for all museums
     fig = go.Figure()
 
-    # Add the choropleth maps and locations for each dataset
+    # Plot each museum's data as a separate trace but initially hide them
     for i, df in enumerate(valid_museum_data):
-        # Add the choropleth map
-        fig.add_trace(
-            go.Choropleth(
-                locations=df["CODE"],
-                z=df["Count"],
-                text=df["Country_normalized"],
-                colorscale="YlGnBu",
-                autocolorscale=False,
-                reversescale=True,
-                marker_line_color="darkgray",
-                marker_line_width=0.5,
-                colorbar_title="number of artworks in collection",
-                name=valid_museum_names[i],
-                visible=False,  # Initially set to invisible
-            )
+        choropleth = go.Choropleth(
+            locations=df["CODE"],
+            z=df["Count"],
+            text=df["Country_normalized"],
+            colorscale="YlGnBu",
+            autocolorscale=False,
+            reversescale=True,
+            marker_line_color="darkgray",
+            marker_line_width=0.5,
+            colorbar_title="Number of Artworks in Collection",
+            visible=False,  # Initially set all maps to be invisible
+            name=valid_museum_names[i],  # Use museum name for dropdown
         )
+
+        # Add the choropleth map to the figure
+        fig.add_trace(choropleth)
 
         # Add red spot at museum location (if lat/lon are provided)
         fig.add_trace(
@@ -96,48 +92,54 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
                     size=10,
                     symbol="circle",
                 ),
-                name=f"Location of {valid_museum_names[i]}",
-                visible=False,  # Initially set to invisible
+                name=valid_museum_names[i],
+                visible=False,  # Initially set all markers to be invisible
             )
         )
 
-    # Create dropdown menu to toggle datasets
+    # Update layout to include the dropdown menu
     fig.update_layout(
         geo=dict(
-            showframe=True, showcoastlines=False, projection_type="equirectangular"
+            showframe=True,
+            showcoastlines=False,
+            projection_type="equirectangular",
         ),
+        height=600,  # Adjust the height to fit the plot
+        showlegend=False,
+        title_text="Artworks in Collections by Origin Country",
         updatemenus=[
             {
                 "buttons": [
                     {
                         "args": [
-                            [museum_name],
                             {
                                 "visible": [
-                                    True if name == museum_name else False
+                                    True if name == museum else False
                                     for name in valid_museum_names
                                 ]
                             },
+                            {
+                                "title": f"Artworks in Collections by Origin Country - {museum}"
+                            },
                         ],
-                        "label": museum_name,
-                        "method": "restyle",
+                        "label": museum,
+                        "method": "update",
                     }
-                    for museum_name in valid_museum_names
+                    for museum in valid_museum_names
                 ],
                 "direction": "down",
-                "pad": {"r": 10, "t": 87},
                 "showactive": True,
-                "type": "buttons",
-                "x": 0.1,
+                "active": 0,  # Default to the first museum in the list
+                "x": 0.17,
                 "xanchor": "left",
-                "y": 1.15,
+                "y": 1.1,
                 "yanchor": "top",
             }
         ],
     )
 
-    # Show the first dataset by default
+    # Make the first plot visible by default
     fig.data[0].visible = True
-    fig.data[1].visible = True  # Ensure the first museum's location is visible as well
+    fig.data[1].visible = True
 
     return fig
