@@ -1,3 +1,6 @@
+import os
+import geopandas as gpd
+import pandas as pd
 import plotly.graph_objects as go
 import pycountry
 
@@ -14,7 +17,7 @@ def normalize_country_name(country_name):
 def add_country_code(country_name):
     try:
         country = pycountry.countries.get(name=country_name)
-        return country.alpha_3
+        return country.alpha_3 if country else None
     except:
         return None
 
@@ -59,10 +62,16 @@ def plot_origin_countries2(museum_data, museum_names, min_year=1860):
         )
         df["CODE"] = df["Country_normalized"].apply(add_country_code)
 
-    # Create a single subplot (choropleth) with one plot for all museums
+        # Remove rows with invalid codes
+        df = df[df["CODE"].notna()]
+
+    # Create a single plot (choropleth) with one plot for all museums
     fig = go.Figure()
 
-    # Plot each museum's data as a separate trace but initially hide them
+    # Create choropleth maps and markers for each museum
+    choropleths = []
+    markers = []
+
     for i, df in enumerate(valid_museum_data):
         choropleth = go.Choropleth(
             locations=df["CODE"],
@@ -77,25 +86,27 @@ def plot_origin_countries2(museum_data, museum_names, min_year=1860):
             visible=False,  # Initially set all maps to be invisible
             name=valid_museum_names[i],  # Use museum name for dropdown
         )
-
-        # Add the choropleth map to the figure
-        fig.add_trace(choropleth)
+        choropleths.append(choropleth)
 
         # Add red spot at museum location (if lat/lon are provided)
-        fig.add_trace(
-            go.Scattergeo(
-                lon=[longitudes[i]],
-                lat=[latitudes[i]],
-                mode="markers",
-                marker=dict(
-                    color="red",
-                    size=10,
-                    symbol="circle",
-                ),
-                name=valid_museum_names[i],
-                visible=False,  # Initially set all markers to be invisible
-            )
+        marker = go.Scattergeo(
+            lon=[longitudes[i]],
+            lat=[latitudes[i]],
+            mode="markers",
+            marker=dict(
+                color="red",
+                size=10,
+                symbol="circle",
+            ),
+            name=f"Location of {valid_museum_names[i]}",  # Label marker
+            visible=False,  # Initially set all markers to be invisible
         )
+        markers.append(marker)
+
+    # Add choropleths and markers to the figure
+    for choropleth, marker in zip(choropleths, markers):
+        fig.add_trace(choropleth)
+        fig.add_trace(marker)
 
     # Update layout to include the dropdown menu
     fig.update_layout(
@@ -114,8 +125,12 @@ def plot_origin_countries2(museum_data, museum_names, min_year=1860):
                         "args": [
                             {
                                 "visible": [
-                                    True if name == museum else False
-                                    for name in valid_museum_names
+                                    True if idx == i else False
+                                    for idx in range(len(valid_museum_data))
+                                ]
+                                + [
+                                    True if idx == i else False
+                                    for idx in range(len(valid_museum_data))
                                 ]
                             },
                             {
@@ -125,7 +140,7 @@ def plot_origin_countries2(museum_data, museum_names, min_year=1860):
                         "label": museum,
                         "method": "update",
                     }
-                    for museum in valid_museum_names
+                    for i, museum in enumerate(valid_museum_names)
                 ],
                 "direction": "down",
                 "showactive": True,
@@ -138,8 +153,8 @@ def plot_origin_countries2(museum_data, museum_names, min_year=1860):
         ],
     )
 
-    # Make the first plot visible by default
-    fig.data[0].visible = True
-    fig.data[1].visible = True
+    # Make the first plot and marker visible by default
+    fig.data[0].visible = True  # First choropleth
+    fig.data[1].visible = True  # First marker
 
     return fig
