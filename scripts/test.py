@@ -2,7 +2,6 @@ import os
 import geopandas as gpd
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 from shapely.geometry import Point
 import pycountry
 
@@ -57,19 +56,21 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
     latitudes = [55.6761, 40.7128, 40.7128, 40.4168, 48.8566, -27.4698, 38.9072]
     longitudes = [12.5683, -74.0060, -74.0060, -3.7038, 2.3522, 153.0251, -77.0369]
 
-    # normalize country names and add codes
+    # Normalize country names and add codes
     for df in valid_museum_data:
         df["Country_normalized"] = df["Country_calculated"].apply(
             normalize_country_name
         )
         df["CODE"] = df["Country_normalized"].apply(add_country_code)
 
-    # Plot
-    for i, df in enumerate(
-        valid_museum_data
-    ):  # Fix: use enumerate to get both index and df
-        fig = go.Figure(
-            data=go.Choropleth(
+    # Create figure
+    fig = go.Figure()
+
+    # Add the choropleth maps and locations for each dataset
+    for i, df in enumerate(valid_museum_data):
+        # Add the choropleth map
+        fig.add_trace(
+            go.Choropleth(
                 locations=df["CODE"],
                 z=df["Count"],
                 text=df["Country_normalized"],
@@ -79,31 +80,64 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
                 marker_line_color="darkgray",
                 marker_line_width=0.5,
                 colorbar_title="number of artworks in collection",
+                name=valid_museum_names[i],
+                visible=False,  # Initially set to invisible
             )
         )
 
         # Add red spot at museum location (if lat/lon are provided)
-        if latitudes is not None and longitudes is not None:
-            fig.add_trace(
-                go.Scattergeo(
-                    lon=[
-                        longitudes[i]
-                    ],  # Fix: Use latitudes[i] and longitudes[i] correctly
-                    lat=[latitudes[i]],
-                    mode="markers",
-                    marker=dict(
-                        color="red",
-                        size=10,
-                        symbol="circle",
-                    ),
-                    name=valid_museum_names[i],
-                )
+        fig.add_trace(
+            go.Scattergeo(
+                lon=[longitudes[i]],
+                lat=[latitudes[i]],
+                mode="markers",
+                marker=dict(
+                    color="red",
+                    size=10,
+                    symbol="circle",
+                ),
+                name=f"Location of {valid_museum_names[i]}",
+                visible=False,  # Initially set to invisible
             )
-
-        fig.update_layout(
-            geo=dict(
-                showframe=True, showcoastlines=False, projection_type="equirectangular"
-            ),
         )
+
+    # Create dropdown menu to toggle datasets
+    fig.update_layout(
+        geo=dict(
+            showframe=True, showcoastlines=False, projection_type="equirectangular"
+        ),
+        updatemenus=[
+            {
+                "buttons": [
+                    {
+                        "args": [
+                            [museum_name],
+                            {
+                                "visible": [
+                                    True if name == museum_name else False
+                                    for name in valid_museum_names
+                                ]
+                            },
+                        ],
+                        "label": museum_name,
+                        "method": "restyle",
+                    }
+                    for museum_name in valid_museum_names
+                ],
+                "direction": "down",
+                "pad": {"r": 10, "t": 87},
+                "showactive": True,
+                "type": "buttons",
+                "x": 0.1,
+                "xanchor": "left",
+                "y": 1.15,
+                "yanchor": "top",
+            }
+        ],
+    )
+
+    # Show the first dataset by default
+    fig.data[0].visible = True
+    fig.data[1].visible = True  # Ensure the first museum's location is visible as well
 
     return fig
