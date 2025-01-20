@@ -54,6 +54,7 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
         "Washington, DC",
     ]
     # Corresponding latitudes and longitudes
+    # in the future here should be a script, so data will be added automatically
     latitudes = [55.6761, 40.7128, 40.7128, 40.4168, 48.8566, -27.4698, 38.9072]
     longitudes = [12.5683, -74.0060, -74.0060, -3.7038, 2.3522, 153.0251, -77.0369]
 
@@ -69,7 +70,7 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
         rows=len(valid_museum_data),
         cols=1,
         subplot_titles=valid_museum_names,
-        vertical_spacing=0.05,
+        vertical_spacing=0.01,
         shared_xaxes=True,
         shared_yaxes=True,
         specs=[
@@ -90,6 +91,7 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
             marker_line_color="darkgray",
             marker_line_width=0.5,
             colorbar_title="number of artworks in collection",
+            colorbar=None,
         )
 
         # Add the choropleth map to the subplot
@@ -111,14 +113,17 @@ def plot_origin_countries(museum_data, museum_names, min_year=1860):
             row=i + 1,
             col=1,
         )
+        # Update geo layout for each subplot
+        fig.update_geos(
+            row=i + 1,
+            col=1,
+            showframe=True,
+            showcoastlines=False,
+            projection_type="natural earth",
+        )
 
     # Update layout
     fig.update_layout(
-        geo=dict(
-            showframe=True,
-            showcoastlines=False,
-            projection_type="equirectangular",
-        ),
         height=300
         * len(valid_museum_data),  # Adjust height based on number of subplots
         showlegend=False,
