@@ -45,4 +45,8 @@ Skills: data visualization (subplots, bar charts, pie charts, area charts, histo
 Procedure and results
 https://github.com/ToninaP/data_analysis_portfolio/blob/main/exploratory_analysis.ipynb
 
+## descriptive analysis
+
+## statistical analysis
+
 
