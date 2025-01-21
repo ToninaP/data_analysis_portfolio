@@ -1,5 +1,5 @@
 # data_analysis_portfolio
-Welcome to my Data Analysis portfolo! 
+Welcome to my Data Analysis portfolio! 
 
 Junior researcher @ Cultural data analysis lab (2020-2024), preparing for graduation from a PhD program at Tallinn University. https://cudan.tlu.ee/team/antonina/
 
