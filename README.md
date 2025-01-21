@@ -1,6 +1,10 @@
 # data_analysis_portfolio
 Welcome to my Data Analysis portfolo! I am preparing for graduation from a PhD program at Tallinn University. 
 
+Junior researcher @ Cultural data analysis lab (2020-2024) https://cudan.tlu.ee/team/antonina/
+
+This set of projects is created to demonstrate my analytic and technical skills. 
+
 # data
 All data used in the project was open access. I am grateful for institutions allowing the enthusiasts like me to play with their data.
 | Musem name | Country| Data acquisition method | Link |
