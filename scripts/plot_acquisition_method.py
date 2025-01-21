@@ -76,5 +76,6 @@ def plot_acquisition_method(museum_data, museum_names, min_year=1860):
         ),
     )
     fig.update_layout(template="plotly_white")
+    fig.show("svg")
 
     return fig
