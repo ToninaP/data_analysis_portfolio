@@ -6,7 +6,7 @@ Junior researcher @ Cultural data analysis lab (2020-2024), preparing for gradua
 This set of projects is created to demonstrate my analytic and technical skills. 
 
 # data
-All data used in the project was open access. I am grateful for institutions allowing the enthusiasts like me to play with their data.
+All data used in the project was open access. I am grateful to institutions allowing the enthusiasts like me to play with their datasets.
 | Musem name | Country| Data acquisition method | Link |
 |----------|----------|----------|----------|
 | MET| USA| Open access| https://github.com/metmuseum/openaccess|
