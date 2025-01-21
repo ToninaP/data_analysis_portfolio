@@ -18,7 +18,7 @@ All data used in the project was open access. I am grateful for institutions all
 |MOT|Japan|API|https://museumcollection.tokyo/en/developer/|
 |MOMA|USA|Open access|https://github.com/MuseumofModernArt/collection|
 |Whitney|USA|Open access|https://github.com/whitneymuseum/open-access/blob/main/artists.csv|
-|SMK|Denmark|Open access|https://www.smk.dk/en/article/smk-api/|
+|SMK|Denmark|API|https://www.smk.dk/en/article/smk-api/|
 |National Gallery of Art|USA|Open access|https://github.com/NationalGalleryOfArt/opendata|
 
 # analysis
