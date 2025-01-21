@@ -21,6 +21,17 @@ All data used in the project was open access. I am grateful to institutions allo
 |SMK|Denmark|API|https://www.smk.dk/en/article/smk-api/|
 |National Gallery of Art|USA|Open access|https://github.com/NationalGalleryOfArt/opendata|
 
+# data preparation
+
+Objective:
+
+Tools: Python (Pandas)
+
+Skills:
+
+Procedure:
+https://github.com/ToninaP/data_analysis_portfolio/blob/main/notebooks/data_cleaning.ipynb
+
 # analysis
 
 ## exploratory analysis project
