@@ -1,5 +1,5 @@
 # data_analysis_portfolio
-this is a personal project to strengthen my data analysis methods
+Welcome to my Data Analysis portfolo! I am preparing for graduation from a PhD program at Tallinn University. 
 
 # data
 All data used in the project was open access. I am grateful for institutions allowing the enthusiasts like me to play with their data.
@@ -21,9 +21,13 @@ All data used in the project was open access. I am grateful for institutions all
 
 ## exploratory analysis project
 
-Objective:
+Objective: To find collecting patterns of 11 contemporary arts museums. Media persentage of artworks, aquisition sources, geographical distributions, gender and artists age distributions.
+
 Tools: Python (Pandas, Plotly)
-Skills: data visualization
-Procedure https://github.com/ToninaP/data_analysis_portfolio/blob/main/exploratory_analysis.ipynb
-Results:
+
+Skills: data visualization (subplots, bar charts, pie charts, area charts, histograms, geographical mapping); writing modules, functions, loops, conditionals, lists, dictionaries.
+
+Procedure and results
+https://github.com/ToninaP/data_analysis_portfolio/blob/main/exploratory_analysis.ipynb
+
 
