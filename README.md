@@ -25,7 +25,7 @@ All data used in the project was open access. I am grateful for institutions all
 
 ## exploratory analysis project
 
-Objective: To find collecting patterns of 11 contemporary arts museums. Media persentage of artworks, aquisition sources, geographical distributions, gender and artists age distributions.
+Objective: To find collecting patterns of 11 contemporary arts museums. Media persentage of artworks, aquisition sources, geographical distributions, gender and artists age distributions are the main focal points for the exploration.
 
 Tools: Python (Pandas, Plotly)
 
