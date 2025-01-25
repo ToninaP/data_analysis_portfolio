@@ -36,7 +36,17 @@ Data dictionary: https://github.com/ToninaP/data_analysis_portfolio/blob/main/da
 
 # analysis
 
-## exploratory analysis project
+## exploratory analysis project - comparison across multiple datasets
+
+Objective: to find what kind of art one museum collects, and to determine if the museum supports the development of arts.
+
+Tools: Tableau
+
+Skills: aggregation calculations, changing data types, dual axis charts, filtering, dashboards, stories.
+
+https://public.tableau.com/app/profile/antonina.korepanova/viz/queensland_exploratory/Story1?publish=yes
+
+## exploratory analysis project - comparison across multiple datasets
 
 Objective: To find collecting patterns of 11 contemporary arts museums. Media persentage of artworks, aquisition sources, geographical distributions, gender and artists age distributions are the main focal points for the exploration.
 
