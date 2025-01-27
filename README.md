@@ -23,7 +23,7 @@ All data used in the project was open access. I am grateful to institutions allo
 
 # data preparation
 
-Objective:
+Objective: Prepare data for analysis by keeping only relevant data, unifying data types, and variable names. Dealing with missing data and outliers. Extracting numerical data from strings, and unifying string data for classification and visualization. 
 
 Tools: Python (Pandas)
 
