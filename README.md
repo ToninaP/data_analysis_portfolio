@@ -61,4 +61,26 @@ https://github.com/ToninaP/data_analysis_portfolio/blob/main/exploratory_analysi
 
 ## statistical analysis
 
+# published articles based on work with data
+
+## Quantifying collection lag
+Co-authors: 
+Objective:
+
+Tools:
+
+Skills:
+
+Publication: https://cudan-museums.github.io/
+
+## Leveraging Existing Online Platforms to Support Knowledge Exchange Between Visual Arts Educators
+Co-authors: 
+
+Objective:
+
+Tools:
+
+Skills:
+
+Publication: https://link.springer.com/chapter/10.1007/978-3-031-61678-5_11
 
