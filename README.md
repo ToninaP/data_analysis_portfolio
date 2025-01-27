@@ -63,7 +63,7 @@ https://github.com/ToninaP/data_analysis_portfolio/blob/main/exploratory_analysi
 
 # published articles based on work with data
 
-## Quantifying collection lag
+## Quantifying Collection Lag in European Modern and Contemporary Art Museums
 Co-authors: 
 Objective:
 
