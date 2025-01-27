@@ -64,23 +64,26 @@ https://github.com/ToninaP/data_analysis_portfolio/blob/main/exploratory_analysi
 # published articles based on work with data
 
 ## Quantifying Collection Lag in European Modern and Contemporary Art Museums
-Co-authors: 
-Objective:
+Co-authors: Mar Canet Sola, Ksenia Mukhina, Max Schich.
 
-Tools:
+Objective: To create a measure to calculate the level of support an art museum can give contemporary artists. Find a way to identify museums focused on presevation of at vs. on creation of at.
 
-Skills:
+Tools: Python (Pandas, Plotly), Git. 
+
+Skills: Data scraping, data cleaning and preparing for analysis, working with dictionaries, loops, and conditions. Creating subplots, bar charts, area charts, violin plots, and heatmaps. Collaboration using the version control system. 
 
 Publication: https://cudan-museums.github.io/
 
 ## Leveraging Existing Online Platforms to Support Knowledge Exchange Between Visual Arts Educators
-Co-authors: 
+Co-authors: Cosmo Ligthfoot, Kai Pata.
 
-Objective:
+Objective: Use open access platforms to store research findings with affordances to use the system as a collaborative knowledge co-creation tool.
 
-Tools:
+Tools: Google Sheets, Observable
 
-Skills:
+Skills: data connection, data visualization.
 
 Publication: https://link.springer.com/chapter/10.1007/978-3-031-61678-5_11
+
+Data visualization: https://observablehq.com/d/0feef33fe6bb1305
 
