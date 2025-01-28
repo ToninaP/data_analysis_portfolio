@@ -44,7 +44,14 @@ Tools: Tableau
 
 Skills: aggregation calculations, changing data types, dual axis charts, filtering, dashboards, stories.
 
+Story about Queensland Art museum:
+
 https://public.tableau.com/app/profile/antonina.korepanova/viz/queensland_exploratory/Story1?publish=yes
+
+Interactive dashboard to explore data of all 11 museums:
+
+https://public.tableau.com/app/profile/antonina.korepanova/viz/museums_17380294803550/Dashboard1?publish=yes
+
 
 ## exploratory analysis project - comparison across multiple datasets
 
