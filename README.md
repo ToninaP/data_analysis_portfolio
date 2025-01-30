@@ -30,7 +30,7 @@ Tools: Python (Pandas)
 Skills:
 
 Procedure:
-https://github.com/ToninaP/data_analysis_portfolio/blob/main/notebooks/data_cleaning.ipynb
+https://github.com/ToninaP/data_analysis_portfolio/blob/main/data_cleaning.ipynb
 
 Data dictionary: https://github.com/ToninaP/data_analysis_portfolio/blob/main/data/data_dictionary
 
