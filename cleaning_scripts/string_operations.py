@@ -20,9 +20,10 @@ def create_artist_name_col(df):
         "artists",
         "forwarddisplayname",
         "production_0_creator",
+        "display_name",
+        "artist_0",
     ]
 
-    # Flag to track if we found a matching column
     found_artist = False
 
     # Loop over the possible column names and use the first one that exists
@@ -31,9 +32,10 @@ def create_artist_name_col(df):
             df["Artist"] = df[col]
             print(f"Artist name found in column: {col}")
             found_artist = True
-            break
+            break  # Exit the loop once we find the artist
 
+    # If no artist was found in any column
     if not found_artist:
-        print("Artist name is not found in any expected columns")
+        print(f"Artist name is not found in any expected columns")
 
     return df
