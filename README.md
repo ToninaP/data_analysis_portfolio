@@ -4,6 +4,7 @@ Welcome to my Data Analysis portfolio!
 Junior researcher @ Cultural data analysis lab (2020-2024), preparing for graduation from a PhD program at Tallinn University. https://cudan.tlu.ee/team/antonina/
 
 This set of projects is created to demonstrate my analytic and technical skills. 
+Follow my progress in data analysis https://roadmap.sh/data-analyst?s=67082358fb4be684db02989a
 
 # data
 All data used in the project was open access. I am grateful to institutions allowing the enthusiasts like me to play with their datasets.
@@ -73,7 +74,7 @@ https://github.com/ToninaP/data_analysis_portfolio/blob/main/exploratory_analysi
 ## Quantifying Collection Lag in European Modern and Contemporary Art Museums
 Co-authors: Mar Canet Sola, Ksenia Mukhina, Max Schich.
 
-Objective: To create a measure to calculate the level of support an art museum can give contemporary artists. Find a way to identify museums focused on presevation of at vs. on creation of at.
+Objective: To create a measure to calculate the level of support an art museum can give contemporary artists. Find a way to identify museums focused on art presevation vs. creation.
 
 Tools: Python (Pandas, Plotly), Git. 
 
