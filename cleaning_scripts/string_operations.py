@@ -39,3 +39,30 @@ def create_artist_name_col(df):
         print(f"Artist name is not found in any expected columns")
 
     return df
+
+
+def create_artwork_title(df):
+    # List of possible column names for the artist name
+    possible_columns = [
+        "object_title",
+        "artwork_name",
+        "Title",
+        "url",
+        "name",
+        "title",
+        "title_fi",
+        "titles_0_title",
+    ]
+    found_artist = False
+    # Loop over the possible column names and use the first one that exists
+    for col in possible_columns:
+        if col in df.columns:
+            df["Title"] = df[col]
+            print(f"Artwork title found in column: {col}")
+            found_artist = True
+            break  # Exit loop once we find the first match
+    # If no artist was found in any column
+    if not found_artist:
+        print(f"Artwork title is not found in any expected columns")
+
+    return df
