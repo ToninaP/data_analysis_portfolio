@@ -7,22 +7,46 @@ def extract_first_number(value):
     if pd.isna(value):
         return pd.NA
 
-    # If it's a string, replace symbols with spaces
-    if isinstance(value, str):  # If it's a string
-        years = re.findall(r"\b\d{4}\b", value)  # Find all 4-digit numbers
-        if years:  # If the list is not empty
-            year = years[0]
-            year = pd.to_numeric(year)
-        else:  # If no years are found, set to a default value
-            year = pd.NA
-    # If it's an int or float, convert to string and process
-    elif isinstance(value, (int, float)):  # If it's a number (int or float)
-        value = str(value)  # Convert to string
-        years = re.findall(r"\b\d{4}\b", value)  # Try to find 4-digit numbers
-        if years:  # If the list is not empty
-            year = years[0]
-            year = pd.to_numeric(year)
-        else:  # If no years are found, set to a default value
-            year = pd.NA
+    # If it's a string or number (int/float), process it
+    if isinstance(value, (str, int, float)):
+        # Convert to string if it's a number
+        if isinstance(value, (int, float)):
+            value = str(value)
 
-    return year
+        # Find all 4-digit numbers
+        years = re.findall(r"\b\d{4}\b", value)
+
+        # If years are found, convert first one to numeric
+        if years:
+            year = pd.to_numeric(years[0])
+            # Return year only if it's not greater than 2024
+            return year if year <= 2024 else pd.NA
+
+    # Return NA if no valid year is found
+    return pd.NA
+
+
+def extract_last_number(value):
+    # Check if the value is NaN or not a string/number
+    if pd.isna(value):
+        return pd.NA
+
+    # If it's a string or number (int/float), process it
+    if isinstance(value, (str, int, float)):
+        # Convert to string if it's a number
+        if isinstance(value, (int, float)):
+            value = str(value)
+
+        if "-" in value:
+            new_value = value.split("-")[-1]
+        # Find all 4-digit numbers
+        years = re.findall(r"\b\d{4}\b", new_value)
+
+        # If years are found, convert first one to numeric
+        if years:
+            year = pd.to_numeric(years[0])
+            # Return year only if it's not greater than 2024
+            return year if year <= 2024 else pd.NA
+
+    # Return NA if no valid year is found
+    return pd.NA
