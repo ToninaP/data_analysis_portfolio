@@ -56,7 +56,7 @@ def clean_acquisition_year(df):
                 print(
                     f"Number of cleaned variables: {count_nans} out of {total_rows} ({coverage_percent:.1f}%)"
                 )
-                print("|----------------------------------|")
+                print("----------------------------------")
 
                 found_column = True
                 break
@@ -266,12 +266,12 @@ def improve_acquisition_kiasma(df):
 def improve_acquisition_ateneum(df):
     """
     Extract years from inventoryNumber field to fill missing Year_acquisition values.
+    Limits years to 2024 or earlier.
     """
 
     def extract_ateneum_year(text):
         if pd.isna(text):
             return pd.NA
-
         text = str(text).strip()
         patterns = [
             r"A-?((?:19|20)\d{2})-\d+",  # A-2016-130
@@ -283,11 +283,12 @@ def improve_acquisition_ateneum(df):
             r"A[- ]III[- ](19\d{2}):\d+",  # A III 1924:78
             r"(?:^|\s)((?:18|19|20)\d{2})(?:\s|$|[:-])",  # Generic year
         ]
-
         for pattern in patterns:
             match = re.search(pattern, text)
             if match:
-                return int(match.group(1) if match.groups() else match.group())
+                year = int(match.group(1) if match.groups() else match.group())
+                # Add validation to ensure year is not greater than 2024
+                return year if year <= 2024 else pd.NA
         return pd.NA
 
     mask = df["inventoryNumber"].notna()
@@ -300,6 +301,7 @@ def improve_acquisition_ateneum(df):
     count_nans = df["Year_acquisition"].notna().sum()
     total_rows = len(df)
     coverage_percent = (count_nans / total_rows) * 100
+
     # Print summary of improvements
     total_fixed = update_mask.sum() - df[update_mask]["Year_acquisition"].isna().sum()
     print(f"Fixed {total_fixed} out of {update_mask.sum()} problematic rows")
@@ -308,25 +310,3 @@ def improve_acquisition_ateneum(df):
     )
     print("---------------------------------------")
     return df.copy()
-
-
-def find_outliers(df):
-    # Print summary statistics for the cleaned years
-    valid_years = df["Year_acquisition"].dropna()
-    if len(valid_years) > 0:
-        print("\nYear statistics:")
-        print(f"Earliest year: {valid_years.min()}")
-        print(f"Latest year: {valid_years.max()}")
-        print(f"Median year: {valid_years.median()}")
-
-        # Flag potential outliers
-        q1 = valid_years.quantile(0.25)
-        q3 = valid_years.quantile(0.75)
-        iqr = q3 - q1
-        outliers = valid_years[
-            (valid_years < (q1 - 1.5 * iqr)) | (valid_years > (q3 + 1.5 * iqr))
-        ]
-        if len(outliers) > 0:
-            print(f"\nPotential outliers detected ({len(outliers)} values):")
-            print(outliers.value_counts().head())
-            print("|----------------------------------|")
