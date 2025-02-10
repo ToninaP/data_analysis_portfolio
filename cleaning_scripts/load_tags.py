@@ -289,6 +289,8 @@ def load_medium_tags():
         "documents",
     ]
     return medium_tags, medium_name
+
+
 def load_nationality_tags():
 
     nationality_tags = [
@@ -690,6 +692,7 @@ def load_nationality_tags():
     ]
 
     return nationality_tags, country_name
+
 
 def load_acquisition_tags():
     acqusition_tags = [
