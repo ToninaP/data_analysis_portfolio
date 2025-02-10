@@ -1,3 +1,6 @@
+import pandas as pd
+from cleaning_scripts.load_tags import load_medium_tags #returns medium_tags, medium_name
+
 def create_artist_name_col(df):
     """
     The function creates a new column with Artist name based on the original column across several datasets
@@ -66,3 +69,56 @@ def create_artwork_title(df):
         print(f"Artwork title is not found in any expected columns")
 
     return df
+
+
+medium_tags, medium_name = load_medium_tags()
+def classify_medium(df):
+    #iterate over columns to find medium data
+    possible_columns = ['','', '', '', '', '', 
+                        '']
+    
+    #create Medium_raw and fill it original data
+    df['Mediun_raw'] = pd.NA
+    df['Medium_classified'] = pd.NA
+    found_column = False
+    
+    for col in possible_columns:
+        if col in df.columns:
+            df['Mediun_raw'] = df[col].str.lower()
+            print(f"Data found in column: {col}")
+            found_column = True
+            # Calculate statistics
+            count_nans = df["Mediun_raw"].notna().sum()
+            total_rows = len(df)
+            coverage_percent = (count_nans / total_rows) * 100
+            print(f"Number of variables in the original column: {count_nans} out of {total_rows} ({coverage_percent:.1f}%)")
+            break  # Exit loop once we find the first match 
+    if not found_column:
+        print("Data is not found in any expected columns")
+    if found_column == True:
+        # Iterate over each row in the DataFrame
+        for idx, row in df.iterrows():
+            medium = row['Medium_raw'] 
+            
+            # Skip if the 'Medium' value is not a string (e.g., NaN or other types)
+            if not isinstance(medium, str):
+                continue
+            
+            # Check each tag group (e.g., ['paper', 'watercolor'], ['oil'])
+            for i, tag_group in enumerate(medium_tags):
+                # Check if any keyword from the tag group exists in the 'Medium' column
+                if any(tag.lower() in medium.lower() for tag in tag_group):
+                    # Assign the corresponding medium name (from medium_name list)
+                    df.at[idx, 'Medium_classified'] = medium_name[i]
+                    break  # Stop once we find a match
+            
+            #show how much media tags were assigned
+            # Calculate statistics after cleaning
+            count_nans = df["Medium_classified"].notna().sum()
+            total_rows = len(df)
+            coverage_percent = (count_nans / total_rows) * 100
+            print(f"Number of cleaned variables: {count_nans} out of {total_rows} ({coverage_percent:.1f}%)")
+            print("----------------------------------")
+    return df
+
+#create new function to check rows that did not assign any medium tags for testing
