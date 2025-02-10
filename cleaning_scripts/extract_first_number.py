@@ -37,8 +37,13 @@ def extract_last_number(value):
         if isinstance(value, (int, float)):
             value = str(value)
 
+        # Initialize new_value with the original value
+        new_value = value
+
+        # Split by hyphen if present and take last part
         if "-" in value:
             new_value = value.split("-")[-1]
+
         # Find all 4-digit numbers
         years = re.findall(r"\b\d{4}\b", new_value)
 
