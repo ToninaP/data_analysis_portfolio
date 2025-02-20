@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib import style
 import numpy as np
 from scipy import stats
 
@@ -10,6 +11,14 @@ def plot_collection_lag_distribution(collection_lag, museum_names):
         # Filter data between -5 and 200
         filtered_df = df[(df['Collection_lag'] >= -5) & (df['Collection_lag'] <= 200)]
         
+        # Create expanded array based on counts
+        expanded_data = np.repeat(filtered_df['Collection_lag'], filtered_df['count'].astype(int))
+        
+        # Calculate statistics
+        mean_val = np.mean(expanded_data)
+        median_val = np.median(expanded_data)
+        mode_val = stats.mode(expanded_data)[0]
+        
         # Create histogram
         axs[i].hist(filtered_df['Collection_lag'],
                     weights=filtered_df['count'],
@@ -18,13 +27,17 @@ def plot_collection_lag_distribution(collection_lag, museum_names):
                     alpha=0.7)
         
         # Calculate KDE
-        
         kde_xs = np.linspace(-5, 200, 200)
-        kde = stats.gaussian_kde(np.repeat(filtered_df['Collection_lag'], filtered_df['count'].astype(int)))
+        kde = stats.gaussian_kde(expanded_data)
         kde_density = kde(kde_xs)
         
         # Plot KDE curve
-        axs[i].plot(kde_xs, kde_density, 'r-', lw=2, label='KDE')
+        axs[i].plot(kde_xs, kde_density, 'r-', lw=2, label='Distribution')
+        
+        # Add vertical lines for mean, median, and mode
+        axs[i].axvline(mean_val, color='green', linestyle='--', lw=2, label=f'Mean: {mean_val:.1f}')
+        axs[i].axvline(median_val, color='blue', linestyle='--', lw=2, label=f'Median: {median_val:.1f}')
+        axs[i].axvline(mode_val, color='purple', linestyle='--', lw=2, label=f'Mode: {mode_val:.1f}')
         
         # Add title for each subplot using museum name
         axs[i].set_title(museum, pad=10)
@@ -32,8 +45,8 @@ def plot_collection_lag_distribution(collection_lag, museum_names):
         # Optional: Add grid for better readability
         axs[i].grid(True, alpha=0.3)
         
-        # Add legend
-        axs[i].legend()
+        # Add legend with statistics values
+        axs[i].legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 
     # Set x-axis limits
     plt.xlim(-5, 200)
